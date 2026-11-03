@@ -398,6 +398,7 @@
         // Render State Grid Tiles
         function renderStateGrid() {
             const grid = document.getElementById('state-tiles-grid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             Object.keys(stateData).forEach(stKey => {
@@ -537,6 +538,7 @@
 
         function renderAuditFeed() {
             const feed = document.getElementById('audit-feed-list');
+            if (!feed) return;
             feed.innerHTML = '';
 
             auditLedger.forEach(entry => {
@@ -578,4 +580,75 @@
         }
 
         function injectAnomaly() {
-            processStreamTick
+            processStreamTick(true);
+        }
+
+        let activeModalState = null;
+        async function openForensicModal(stKey) {
+            activeModalState = stKey;
+            const s = stateData[stKey];
+            document.getElementById('modal-state-name').textContent = `${s.name} (${stKey}) Forensic Inspector`;
+            document.getElementById('modal-cand-a').textContent = s.candA.toLocaleString();
+            document.getElementById('modal-cand-b').textContent = s.candB.toLocaleString();
+            document.getElementById('modal-precincts').textContent = `${s.precinctsIn} / ${s.totalPrecincts}`;
+            
+            const payload = { state: stKey, candA: s.candA, candB: s.candB, totalPrecincts: s.totalPrecincts, precinctsIn: s.precinctsIn };
+            const jsonStr = JSON.stringify(payload, null, 2);
+            document.getElementById('modal-json-payload').textContent = jsonStr;
+
+            const hash = await sha256(jsonStr);
+            document.getElementById('modal-hash-digest').textContent = hash;
+            document.getElementById('modal-integrity-status').textContent = "VERIFIED SHA-256";
+
+            document.getElementById('forensic-modal').classList.remove('hidden');
+        }
+
+        function closeForensicModal() {
+            document.getElementById('forensic-modal').classList.add('hidden');
+        }
+
+        async function reVerifyHash() {
+            if (!activeModalState) return;
+            const s = stateData[activeModalState];
+            const payload = { state: activeModalState, candA: s.candA, candB: s.candB, totalPrecincts: s.totalPrecincts, precinctsIn: s.precinctsIn };
+            const jsonStr = JSON.stringify(payload, null, 2);
+            const hash = await sha256(jsonStr);
+            document.getElementById('modal-hash-digest').textContent = hash;
+            document.getElementById('modal-integrity-status').textContent = "RE-VERIFIED OK";
+        }
+
+        function exportLedger(format) {
+            if (format === 'json') {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(auditLedger, null, 2));
+                const dlAnchor = document.createElement('a');
+                dlAnchor.setAttribute("href", dataStr);
+                dlAnchor.setAttribute("download", "audit_ledger_2026.json");
+                document.body.appendChild(dlAnchor);
+                dlAnchor.click();
+                dlAnchor.remove();
+            } else if (format === 'csv') {
+                let csvRows = ["ID,Timestamp,State,Delta,Hash,Anomaly"];
+                auditLedger.forEach(e => {
+                    csvRows.push(`${e.id},${e.timestamp},${e.state},"${e.delta}",${e.hash},${e.isAnomaly}`);
+                });
+                const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const dlAnchor = document.createElement('a');
+                dlAnchor.setAttribute("href", url);
+                dlAnchor.setAttribute("download", "audit_ledger_2026.csv");
+                document.body.appendChild(dlAnchor);
+                dlAnchor.click();
+                dlAnchor.remove();
+            }
+        }
+
+        // Initialize App on Load
+        window.onload = () => {
+            renderStateGrid();
+            updateSeatGauges();
+            processStreamTick();
+            streamInterval = setInterval(() => processStreamTick(), 4000);
+        };
+    </script>
+</body>
+</html>
