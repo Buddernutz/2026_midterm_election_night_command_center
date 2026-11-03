@@ -47,14 +47,14 @@
         <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
             <!-- Title Branding -->
             <div class="flex items-center space-x-3">
-                <div class="h-10 w-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-lg shadow-lg">
+                <div class="h-10 w-10 rounded-xl bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-lg shadow-lg">
                     <i class="fa-solid fa-check-to-slot"></i>
                 </div>
                 <div>
                     <h1 class="font-black text-base sm:text-lg tracking-wider text-white flex items-center gap-2 font-mono-code">
                         2026 MIDTERM ELECTION COMMAND CENTER
-                        <span id="header-mode-badge" class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
-                            PROJECTION MODE
+                        <span id="header-mode-badge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
+                            VERIFIED AUDIT MODE
                         </span>
                     </h1>
                     <p class="text-xs text-slate-400">Dual-Engine Decision Desk & Independent SHA-256 Audit Ledger</p>
@@ -72,15 +72,15 @@
               Support
             </a>
            
-            <!-- Mode Switcher Toggle Bar -->
+            <!-- Mode Switcher Toggle Bar (Audit Ledger FIRST) -->
             <div class="flex items-center bg-soc-950 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
-                <button id="btn-mode-projection" onclick="setDashboardMode('PROJECTION')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md">
+                <button id="btn-mode-audit" onclick="setDashboardMode('AUDIT')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md">
+                    <i class="fa-solid fa-shield-halved text-emerald-300"></i>
+                    <span>Verified Audit Ledger (SHA-256)</span>
+                </button>
+                <button id="btn-mode-projection" onclick="setDashboardMode('PROJECTION')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Simulated Projections</span>
-                </button>
-                <button id="btn-mode-audit" onclick="setDashboardMode('AUDIT')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                    <span>Verified Audit Ledger (SHA-256)</span>
                 </button>
             </div>
 
@@ -108,15 +108,15 @@
     <main class="container mx-auto px-4 py-6 flex-grow space-y-6">
 
         <!-- Banner Notice for Current Mode -->
-        <div id="mode-banner" class="bg-blue-950/30 border border-blue-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-blue-200">
+        <div id="mode-banner" class="bg-emerald-950/30 border border-emerald-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-200">
             <div class="flex items-center space-x-2.5">
-                <i class="fa-solid fa-circle-info text-blue-400 text-base"></i>
+                <i class="fa-solid fa-shield-check text-emerald-400 text-base"></i>
                 <div>
-                    <span class="font-bold text-white">SIMULATED MEDIA PROJECTIONS MODE ACTIVE:</span>
-                    <span class="text-slate-300">Displaying decision desk models, estimated outstanding mail-in balances, and statistical win probabilities.</span>
+                    <span class="font-bold text-white">VERIFIED AUDIT LEDGER MODE ACTIVE:</span>
+                    <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from the audit ledger.</span>
                 </div>
             </div>
-            <span class="text-[10px] font-mono-code bg-blue-900/50 border border-blue-700/50 text-blue-300 px-2 py-1 rounded">ESTIMATED_CALLS</span>
+            <span class="text-[10px] font-mono-code bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded">SHA256_VERIFIED</span>
         </div>
 
         <!-- Balance of Power Gauges (Senate & House) -->
@@ -135,24 +135,23 @@
                 <!-- Seat Score Counter -->
                 <div class="flex justify-between items-baseline font-mono-code font-black text-2xl">
                     <div class="text-blue-500 flex items-baseline gap-2">
-                        <span id="senate-dem-count">47</span>
+                        <span id="senate-dem-count">48</span>
                         <span class="text-xs font-sans text-slate-400 font-normal">DEM</span>
                     </div>
                     <div class="text-slate-500 text-xs font-sans font-medium">
-                        <span id="senate-uncalled-count">5</span> UNCALLED
+                        <span id="senate-uncalled-count">3</span> UNCALLED
                     </div>
                     <div class="text-red-500 flex items-baseline gap-2">
                         <span class="text-xs font-sans text-slate-400 font-normal">REP</span>
-                        <span id="senate-rep-count">48</span>
+                        <span id="senate-rep-count">49</span>
                     </div>
                 </div>
 
                 <!-- Progress Bar -->
                 <div class="h-4 bg-soc-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 relative">
-                    <div id="senate-bar-dem" class="bg-blue-600 h-full rounded-l-full transition-all duration-500" style="width: 47%"></div>
-                    <div id="senate-bar-uncalled" class="bg-slate-700 h-full transition-all duration-500" style="width: 5%"></div>
-                    <div id="senate-bar-rep" class="bg-red-600 h-full rounded-r-full transition-all duration-500" style="width: 48%"></div>
-                    <!-- Center 51-seat majority marker -->
+                    <div id="senate-bar-dem" class="bg-blue-600 h-full rounded-l-full transition-all duration-500" style="width: 48%"></div>
+                    <div id="senate-bar-uncalled" class="bg-slate-700 h-full transition-all duration-500" style="width: 3%"></div>
+                    <div id="senate-bar-rep" class="bg-red-600 h-full rounded-r-full transition-all duration-500" style="width: 49%"></div>
                     <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-amber-400 z-10" title="51 Majority Threshold"></div>
                 </div>
             </div>
@@ -170,24 +169,23 @@
                 <!-- Seat Score Counter -->
                 <div class="flex justify-between items-baseline font-mono-code font-black text-2xl">
                     <div class="text-blue-500 flex items-baseline gap-2">
-                        <span id="house-dem-count">208</span>
+                        <span id="house-dem-count">210</span>
                         <span class="text-xs font-sans text-slate-400 font-normal">DEM</span>
                     </div>
                     <div class="text-slate-500 text-xs font-sans font-medium">
-                        <span id="house-uncalled-count">19</span> UNCALLED
+                        <span id="house-uncalled-count">13</span> UNCALLED
                     </div>
                     <div class="text-red-500 flex items-baseline gap-2">
                         <span class="text-xs font-sans text-slate-400 font-normal">REP</span>
-                        <span id="house-rep-count">208</span>
+                        <span id="house-rep-count">212</span>
                     </div>
                 </div>
 
                 <!-- Progress Bar -->
                 <div class="h-4 bg-soc-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 relative">
-                    <div id="house-bar-dem" class="bg-blue-600 h-full rounded-l-full transition-all duration-500" style="width: 47.8%"></div>
-                    <div id="house-bar-uncalled" class="bg-slate-700 h-full transition-all duration-500" style="width: 4.4%"></div>
-                    <div id="house-bar-rep" class="bg-red-600 h-full rounded-r-full transition-all duration-500" style="width: 47.8%"></div>
-                    <!-- Center 218-seat majority marker -->
+                    <div id="house-bar-dem" class="bg-blue-600 h-full rounded-l-full transition-all duration-500" style="width: 48.2%"></div>
+                    <div id="house-bar-uncalled" class="bg-slate-700 h-full transition-all duration-500" style="width: 3%"></div>
+                    <div id="house-bar-rep" class="bg-red-600 h-full rounded-r-full transition-all duration-500" style="width: 48.7%"></div>
                     <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-amber-400 z-10" title="218 Majority Threshold"></div>
                 </div>
             </div>
@@ -216,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- Responsive State Tile Grid (Simulated SVG State View) -->
+                <!-- Responsive State Tile Grid -->
                 <div id="state-tiles-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     <!-- Dynamic state cards rendered here -->
                 </div>
@@ -364,7 +362,8 @@
             "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210, regVoters: 2900000, callProjection: "REP_LEAD", callAudit: "REP_LEAD" }
         };
 
-        let currentMode = "PROJECTION"; // "PROJECTION" or "AUDIT"
+        // DEFAULT MODE: "AUDIT" (Verified Audit Ledger Loads First)
+        let currentMode = "AUDIT"; 
         let isStreamActive = true;
         let auditLedger = [];
         let streamInterval = null;
@@ -498,12 +497,12 @@
 
         // Update Seat Gauges based on Mode
         function updateSeatGauges() {
-            let senDem = 47, senRep = 48, senUncalled = 5;
-            let houseDem = 208, houseRep = 208, houseUncalled = 19;
+            let senDem = 48, senRep = 49, senUncalled = 3;
+            let houseDem = 210, houseRep = 212, houseUncalled = 13;
 
-            if (currentMode === 'AUDIT') {
-                senDem = 48; senRep = 49; senUncalled = 3;
-                houseDem = 210; houseRep = 212; houseUncalled = 13;
+            if (currentMode === 'PROJECTION') {
+                senDem = 47; senRep = 48; senUncalled = 5;
+                houseDem = 208; houseRep = 208; houseUncalled = 19;
             }
 
             document.getElementById('senate-dem-count').textContent = senDem;
@@ -602,20 +601,15 @@
             isStreamActive = !isStreamActive;
             const dot = document.getElementById('ping-dot');
             const ind = document.getElementById('ping-indicator');
-            const txt = document.getElementById('status-text');
             const icon = document.getElementById('pause-icon');
 
             if (isStreamActive) {
                 dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
                 ind.classList.remove('hidden');
-                txt.textContent = "STREAM_ACTIVE";
-                txt.className = "font-mono-code text-emerald-400 text-[11px]";
                 icon.className = "fa-solid fa-pause";
             } else {
                 dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500";
                 ind.classList.add('hidden');
-                txt.textContent = "STREAM_PAUSED";
-                txt.className = "font-mono-code text-amber-400 text-[11px]";
                 icon.className = "fa-solid fa-play";
             }
         }
@@ -683,10 +677,9 @@
             }
         }
 
-        // Initialize App on Load
+        // Initialize App on Load in AUDIT MODE
         window.onload = () => {
-            renderStateGrid();
-            updateSeatGauges();
+            setDashboardMode('AUDIT');
             processStreamTick();
             streamInterval = setInterval(() => processStreamTick(), 4000);
         };
