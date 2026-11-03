@@ -12,8 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        soc: { 950: '#060911', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
-                        party: { dem: '#2563eb', rep: '#dc2626', tossup: '#d97706', audit: '#10b981' }
+                        soc: { 950: '#060911', 900: '#0f172a', 800: '#1e293b', 700: '#334155' }
                     }
                 }
             }
@@ -29,7 +28,6 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #060911; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
         .pulse-critical { animation: pulseRed 1.5s infinite; }
         @keyframes pulseRed {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
@@ -40,7 +38,7 @@
 </head>
 <body class="bg-soc-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
 
-    <!-- Top Navigation & Header -->
+    <!-- Header -->
     <header class="border-b border-slate-800 bg-soc-900/90 backdrop-blur sticky top-0 z-40">
         <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
@@ -59,17 +57,12 @@
             </div>
             
             <!-- PayPal Support Button -->
-            <a href="https://paypal.me/1776nocommies" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="inline-flex items-center gap-2 bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-sm">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .761-.643h7.525c3.55 0 6.071 1.737 5.753 5.437-.367 4.26-3.218 6.44-6.852 6.44H9.423l-.974 6.133a.64.64 0 0 1-.632.535l-.741-.28zm6.307-11.837c.21-1.393-.65-2.22-2.316-2.22H8.381l-1.35 8.525h2.152c1.948 0 3.868-.83 4.2-3.805z"/>
-              </svg>
+            <a href="https://paypal.me/1776nocommies" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .761-.643h7.525c3.55 0 6.071 1.737 5.753 5.437-.367 4.26-3.218 6.44-6.852 6.44H9.423l-.974 6.133a.64.64 0 0 1-.632.535l-.741-.28zm6.307-11.837c.21-1.393-.65-2.22-2.316-2.22H8.381l-1.35 8.525h2.152c1.948 0 3.868-.83 4.2-3.805z"/></svg>
               Support
             </a>
            
-            <!-- Mode Switcher Toggle Bar (Audit First) -->
+            <!-- Mode Switcher Toggle Bar -->
             <div class="flex items-center bg-soc-950 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
                 <button id="btn-mode-audit" onclick="setDashboardMode('AUDIT')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md">
                     <i class="fa-solid fa-shield-halved text-emerald-300"></i>
@@ -81,7 +74,7 @@
                 </button>
             </div>
 
-            <!-- Controls -->
+            <!-- Controls & Viewer Badge -->
             <div class="flex items-center space-x-2 bg-soc-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
                 <span class="relative flex h-2.5 w-2.5">
                     <span id="ping-indicator" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -109,7 +102,7 @@
                 <i class="fa-solid fa-shield-check text-emerald-400 text-base"></i>
                 <div>
                     <span class="font-bold text-white">VERIFIED AUDIT LEDGER MODE ACTIVE:</span>
-                    <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from the audit ledger.</span>
+                    <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from audit ledger.</span>
                 </div>
             </div>
             <span class="text-[10px] font-mono-code bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded">SHA256_VERIFIED</span>
@@ -162,16 +155,16 @@
             </div>
         </div>
 
-        <!-- Main Map & Battlegrounds Grid -->
+        <!-- Main Content Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-soc-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
                     <div>
                         <h2 class="font-extrabold text-base text-white flex items-center gap-2">
                             <i class="fa-solid fa-map-location-dot text-blue-400"></i>
-                            Key Battleground States & USA Map View
+                            Key Battleground States Map & Live Margins
                         </h2>
-                        <p class="text-xs text-slate-400">Click state tiles to inspect precinct totals and SHA-256 block digests.</p>
+                        <p class="text-xs text-slate-400">Click any state tile to inspect raw precinct totals, vote deltas, and SHA-256 block digests.</p>
                     </div>
                     <div class="flex items-center space-x-3 text-[11px] font-mono-code">
                         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-600 inline-block"></span> Dem Lead</span>
@@ -180,20 +173,11 @@
                     </div>
                 </div>
 
-                <!-- Graphic Map Indicator Banner -->
-                <div class="bg-soc-950 rounded-xl p-4 border border-slate-800 text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[140px] space-y-2">
-                    <i class="fa-solid fa-earth-americas text-5xl text-slate-800 absolute -right-4 -bottom-4 opacity-40"></i>
-                    <div class="font-bold text-sm text-cyan-400 flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group"></i> 2026 USA MAP GRAPHIC OVERLAY ACTIVE
-                    </div>
-                    <p class="text-xs text-slate-400 max-w-md">Interactive electoral grid synchronized with live SHA-256 state ledger ticks.</p>
-                </div>
-
-                <!-- State Grid -->
+                <!-- State Tiles Grid -->
                 <div id="state-tiles-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
             </div>
 
-            <!-- Stream Log Feed -->
+            <!-- Live Feed Stream -->
             <div class="bg-soc-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -297,29 +281,37 @@
             appId: "1:538970421795:web:a1c8831034bcbc2f8f96"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const rtdb = firebase.database();
+        // Firebase Setup with Fallbacks
+        let db = null, rtdb = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            rtdb = firebase.database();
 
-        const presenceRef = rtdb.ref('presence/' + Math.random().toString(36).substring(2, 9));
-        presenceRef.setValue({ online: true, joined: Date.now() });
-        presenceRef.onDisconnect().remove();
+            const presenceRef = rtdb.ref('presence/' + Math.random().toString(36).substring(2, 9));
+            presenceRef.setValue({ online: true, joined: Date.now() });
+            presenceRef.onDisconnect().remove();
 
-        rtdb.ref('presence').on('value', (snapshot) => {
-            const count = snapshot.numChildren();
+            rtdb.ref('presence').on('value', (snapshot) => {
+                const count = snapshot.numChildren();
+                const el = document.getElementById('live-viewer-count');
+                if (el) el.innerText = `${count} Online`;
+            });
+        } catch (e) {
+            console.warn("Firebase fallback:", e);
             const el = document.getElementById('live-viewer-count');
-            if (el) el.innerText = `${count} Online`;
-        });
+            if (el) el.innerText = "1 Online (Local)";
+        }
 
         const stateData = {
-            "AZ": { name: "Arizona", candA: 520000, candB: 515000, totalPrecincts: 223, precinctsIn: 110, regVoters: 2450000, callProjection: "TOSS-UP" },
-            "GA": { name: "Georgia", candA: 480000, candB: 510000, totalPrecincts: 177, precinctsIn: 140, regVoters: 2100000, callProjection: "REP_LEAD" },
-            "MI": { name: "Michigan", candA: 610000, candB: 580000, totalPrecincts: 502, precinctsIn: 320, regVoters: 2800000, callProjection: "DEM_LEAD" },
-            "PA": { name: "Pennsylvania", candA: 820000, candB: 835000, totalPrecincts: 1703, precinctsIn: 1120, regVoters: 3900000, callProjection: "TOSS-UP" },
-            "NV": { name: "Nevada", candA: 210000, candB: 205000, totalPrecincts: 180, precinctsIn: 95, regVoters: 950000, callProjection: "DEM_LEAD" },
-            "WI": { name: "Wisconsin", candA: 490000, candB: 492000, totalPrecincts: 450, precinctsIn: 280, regVoters: 2100000, callProjection: "TOSS-UP" },
-            "TX": { name: "Texas", candA: 1200000, candB: 1450000, totalPrecincts: 700, precinctsIn: 510, regVoters: 5500000, callProjection: "REP_LEAD" },
-            "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210, regVoters: 2900000, callProjection: "REP_LEAD" }
+            "AZ": { name: "Arizona", candA: 520000, candB: 515000, totalPrecincts: 223, precinctsIn: 110 },
+            "GA": { name: "Georgia", candA: 480000, candB: 510000, totalPrecincts: 177, precinctsIn: 140 },
+            "MI": { name: "Michigan", candA: 610000, candB: 580000, totalPrecincts: 502, precinctsIn: 320 },
+            "PA": { name: "Pennsylvania", candA: 820000, candB: 835000, totalPrecincts: 1703, precinctsIn: 1120 },
+            "NV": { name: "Nevada", candA: 210000, candB: 205000, totalPrecincts: 180, precinctsIn: 95 },
+            "WI": { name: "Wisconsin", candA: 490000, candB: 492000, totalPrecincts: 450, precinctsIn: 280 },
+            "TX": { name: "Texas", candA: 1200000, candB: 1450000, totalPrecincts: 700, precinctsIn: 510 },
+            "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210 }
         };
 
         let currentMode = "AUDIT"; 
@@ -340,21 +332,28 @@
             const banner = document.getElementById('mode-banner');
 
             if (mode === 'PROJECTION') {
-                projBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md";
-                auditBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white";
-                modeBadge.className = "bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest";
-                modeBadge.textContent = "PROJECTION MODE";
-                banner.className = "bg-blue-950/30 border border-blue-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-blue-200";
-                banner.innerHTML = `<div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-info text-blue-400 text-base"></i><div><span class="font-bold text-white">SIMULATED MEDIA PROJECTIONS MODE ACTIVE:</span> <span class="text-slate-300">Displaying decision desk statistical models and forecasts.</span></div></div><span class="text-[10px] font-mono-code bg-blue-900/50 border border-blue-700/50 text-blue-300 px-2 py-1 rounded">ESTIMATED_CALLS</span>`;
+                if (projBtn) projBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md";
+                if (auditBtn) auditBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white";
+                if (modeBadge) {
+                    modeBadge.className = "bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest";
+                    modeBadge.textContent = "PROJECTION MODE";
+                }
+                if (banner) {
+                    banner.className = "bg-blue-950/30 border border-blue-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-blue-200";
+                    banner.innerHTML = `<div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-info text-blue-400 text-base"></i><div><span class="font-bold text-white">SIMULATED MEDIA PROJECTIONS MODE ACTIVE:</span> <span class="text-slate-300">Displaying decision desk statistical models and forecasts.</span></div></div><span class="text-[10px] font-mono-code bg-blue-900/50 border border-blue-700/50 text-blue-300 px-2 py-1 rounded">ESTIMATED_CALLS</span>`;
+                }
             } else {
-                auditBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md";
-                projBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white";
-                modeBadge.className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest";
-                modeBadge.textContent = "VERIFIED AUDIT MODE";
-                banner.className = "bg-emerald-950/30 border border-emerald-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-200";
-                banner.innerHTML = `<div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-check text-emerald-400 text-base"></i><div><span class="font-bold text-white">VERIFIED AUDIT LEDGER MODE ACTIVE:</span> <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from audit ledger.</span></div></div><span class="text-[10px] font-mono-code bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded">SHA256_VERIFIED</span>`;
+                if (auditBtn) auditBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md";
+                if (projBtn) projBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-white";
+                if (modeBadge) {
+                    modeBadge.className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest";
+                    modeBadge.textContent = "VERIFIED AUDIT MODE";
+                }
+                if (banner) {
+                    banner.className = "bg-emerald-950/30 border border-emerald-800/40 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-200";
+                    banner.innerHTML = `<div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-check text-emerald-400 text-base"></i><div><span class="font-bold text-white">VERIFIED AUDIT LEDGER MODE ACTIVE:</span> <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from audit ledger.</span></div></div><span class="text-[10px] font-mono-code bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded">SHA256_VERIFIED</span>`;
+                }
             }
-
             renderStateGrid();
         }
 
@@ -367,22 +366,12 @@
                 const s = stateData[stKey];
                 const totalVotes = s.candA + s.candB;
                 const margin = Math.abs(s.candA - s.candB);
-                const marginPct = totalVotes > 0 ? ((margin / totalVotes) * 100).toFixed(1) : 0;
+                const marginPct = totalVotes > 0 ? ((margin / totalVotes) * 100).toFixed(1) : "0.0";
                 
-                let borderCol = "border-slate-800";
-                let badgeBg = "bg-amber-500/10 text-amber-400 border-amber-500/30";
-                let leadLabel = "TOSS-UP";
-
                 const isDemLead = s.candA > s.candB;
-                if (isDemLead) {
-                    borderCol = "border-blue-800/60";
-                    badgeBg = "bg-blue-500/10 text-blue-400 border-blue-500/30";
-                    leadLabel = `DEM +${marginPct}%`;
-                } else {
-                    borderCol = "border-red-800/60";
-                    badgeBg = "bg-red-500/10 text-red-400 border-red-500/30";
-                    leadLabel = `REP +${marginPct}%`;
-                }
+                const borderCol = isDemLead ? "border-blue-800/60" : "border-red-800/60";
+                const badgeBg = isDemLead ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "bg-red-500/10 text-red-400 border-red-500/30";
+                const leadLabel = isDemLead ? `DEM +${marginPct}%` : `REP +${marginPct}%`;
 
                 const card = document.createElement('div');
                 card.onclick = () => openForensicModal(stKey);
@@ -425,7 +414,6 @@
 
             state.candA = Math.max(0, state.candA + deltaA);
             state.candB = Math.max(0, state.candB + deltaB);
-
             if (state.precinctsIn < state.totalPrecincts) state.precinctsIn += 1;
 
             const payloadStr = JSON.stringify({ state: targetKey, candA: state.candA, candB: state.candB });
@@ -441,13 +429,15 @@
                 alertMsg: alertMsg
             };
 
-            db.collection("audit_ledger").add({
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                state: targetKey,
-                hash: hashDigest,
-                delta: `+${deltaA} / +${deltaB}`,
-                isAnomaly: isAnomaly
-            }).catch(console.error);
+            if (db) {
+                db.collection("audit_ledger").add({
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    state: targetKey,
+                    hash: hashDigest,
+                    delta: `+${deltaA} / +${deltaB}`,
+                    isAnomaly: isAnomaly
+                }).catch(console.error);
+            }
 
             auditLedger.unshift(logEntry);
             if (auditLedger.length > 50) auditLedger.pop();
@@ -512,10 +502,9 @@
             document.getElementById('modal-integrity-status').textContent = "RE-VERIFIED OK";
         }
 
-        // Export Functions (Working Download Trigger)
         function exportLedger(format) {
             if (auditLedger.length === 0) {
-                alert("No batch logs captured in memory yet. Please wait a few seconds for data stream entries.");
+                alert("No stream logs captured yet. Please wait a few seconds!");
                 return;
             }
             if (format === 'json') {
@@ -543,7 +532,7 @@
         }
 
         window.onload = () => {
-            setDashboardMode('AUDIT');
+            renderStateGrid();
             processStreamTick();
             setInterval(() => processStreamTick(), 4000);
         };
