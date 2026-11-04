@@ -34,6 +34,15 @@
             70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+        .state-shape {
+            transition: fill 0.3s ease, stroke 0.2s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+        .state-shape:hover {
+            filter: brightness(1.25);
+            stroke: #38bdf8 !important;
+            stroke-width: 2px !important;
+        }
     </style>
 </head>
 <body class="bg-soc-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
@@ -52,7 +61,7 @@
                             VERIFIED AUDIT MODE
                         </span>
                     </h1>
-                    <p class="text-xs text-slate-400">National Battleground Returns & SHA-256 Cryptographic Audit Ledger</p>
+                    <p class="text-xs text-slate-400">Dual-Engine Decision Desk & Independent SHA-256 Audit Ledger</p>
                 </div>
             </div>
             
@@ -62,7 +71,7 @@
               Support
             </a>
            
-            <!-- Mode Switcher -->
+            <!-- Mode Switcher Toggle Bar -->
             <div class="flex items-center bg-soc-950 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
                 <button id="btn-mode-audit" onclick="setDashboardMode('AUDIT')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md">
                     <i class="fa-solid fa-shield-halved text-emerald-300"></i>
@@ -74,7 +83,7 @@
                 </button>
             </div>
 
-            <!-- Controls & Live Viewer Badge -->
+            <!-- Controls & Viewer Badge -->
             <div class="flex items-center space-x-2 bg-soc-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
                 <span class="relative flex h-2.5 w-2.5">
                     <span id="ping-indicator" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -155,20 +164,42 @@
             </div>
         </div>
 
-        <!-- Main Content Layout -->
+        <!-- Interactive US Electoral Map Section -->
+        <div class="bg-soc-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div>
+                    <h2 class="font-extrabold text-lg text-white flex items-center gap-2">
+                        <i class="fa-solid fa-map text-emerald-400"></i>
+                        Live 50-State Interactive Electoral Map
+                    </h2>
+                    <p class="text-xs text-slate-400">Geographical view of current leads. Click any state to inspect forensic cryptographic ledger.</p>
+                </div>
+                <div class="flex items-center space-x-4 text-xs font-mono-code">
+                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-blue-600 inline-block shadow"></span> Democrat Lead</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-red-600 inline-block shadow"></span> Republican Lead</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-slate-700 inline-block shadow"></span> Uncalled / Tied</span>
+                </div>
+            </div>
+
+            <!-- US Map View Container -->
+            <div class="relative w-full flex justify-center items-center py-2 bg-soc-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+                <div id="map-tooltip" class="absolute pointer-events-none bg-soc-950 border border-slate-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-2xl font-mono-code hidden z-30"></div>
+                <svg id="us-map-svg" viewBox="0 0 960 600" class="w-full h-auto max-h-[500px]">
+                    <!-- Rendered via JavaScript -->
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main Content Layout (Grid + Stream Log) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-soc-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
                     <div>
                         <h2 class="font-extrabold text-base text-white flex items-center gap-2">
-                            <i class="fa-solid fa-map-location-dot text-blue-400"></i>
-                            Key Battleground States Map & Live Margins
+                            <i class="fa-solid fa-border-all text-blue-400"></i>
+                            All 50 State Margins & Precinct Tally Cards
                         </h2>
-                        <p class="text-xs text-slate-400">Click any state tile to inspect raw precinct totals, vote deltas, and SHA-256 block digests.</p>
-                    </div>
-                    <div class="flex items-center space-x-3 text-[11px] font-mono-code">
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-600 inline-block"></span> Dem Lead</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-600 inline-block"></span> Rep Lead</span>
+                        <p class="text-xs text-slate-400">Granular view of all reporting state totals.</p>
                     </div>
                 </div>
 
@@ -204,7 +235,7 @@
         </div>
     </main>
 
-    <!-- Modal -->
+    <!-- Forensic Modal -->
     <div id="forensic-modal" class="fixed inset-0 bg-soc-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-soc-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative space-y-4">
             <button onclick="closeForensicModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -287,7 +318,7 @@
             rtdb = firebase.database();
 
             const presenceRef = rtdb.ref('presence/' + Math.random().toString(36).substring(2, 9));
-            presenceRef.setValue({ online: true, joined: Date.now(), region: "US_NATIONAL" });
+            presenceRef.setValue({ online: true, joined: Date.now() });
             presenceRef.onDisconnect().remove();
 
             rtdb.ref('presence').on('value', (snapshot) => {
@@ -301,20 +332,56 @@
             if (el) el.innerText = "1 Online (Local)";
         }
 
-        const stateData = {
-            "AZ": { name: "Arizona", candA: 520000, candB: 515000, totalPrecincts: 223, precinctsIn: 110 },
-            "GA": { name: "Georgia", candA: 480000, candB: 510000, totalPrecincts: 177, precinctsIn: 140 },
-            "MI": { name: "Michigan", candA: 610000, candB: 580000, totalPrecincts: 502, precinctsIn: 320 },
-            "PA": { name: "Pennsylvania", candA: 820000, candB: 835000, totalPrecincts: 1703, precinctsIn: 1120 },
-            "NV": { name: "Nevada", candA: 210000, candB: 205000, totalPrecincts: 180, precinctsIn: 95 },
-            "WI": { name: "Wisconsin", candA: 490000, candB: 492000, totalPrecincts: 450, precinctsIn: 280 },
-            "TX": { name: "Texas", candA: 1200000, candB: 1450000, totalPrecincts: 700, precinctsIn: 510 },
-            "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210 },
-            "OH": { name: "Ohio", candA: 720000, candB: 790000, totalPrecincts: 410, precinctsIn: 290 },
-            "ME": { name: "Maine", candA: 180000, candB: 172000, totalPrecincts: 110, precinctsIn: 85 },
-            "AK": { name: "Alaska", candA: 92000, candB: 98000, totalPrecincts: 90, precinctsIn: 50 },
-            "IA": { name: "Iowa", candA: 210000, candB: 245000, totalPrecincts: 130, precinctsIn: 92 }
+        const usStatesList = [
+            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+            "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+        ];
+
+        const stateNames = {
+            "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+            "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
+            "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
+            "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+            "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
+            "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
+            "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
+            "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
+            "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
+            "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
         };
+
+        // Standardized Albers USA Map Grid Positions for all 50 states
+        const mapGrid = {
+            "AK": {x: 50, y: 480}, "ME": {x: 880, y: 70}, "VT": {x: 820, y: 90}, "NH": {x: 850, y: 110}, "MA": {x: 850, y: 140},
+            "WA": {x: 120, y: 70}, "ID": {x: 190, y: 120}, "MT": {x: 280, y: 90}, "ND": {x: 410, y: 90}, "MN": {x: 510, y: 100},
+            "WI": {x: 580, y: 140}, "MI": {x: 660, y: 170}, "NY": {x: 780, y: 140}, "RI": {x: 870, y: 170}, "CT": {x: 840, y: 170},
+            "OR": {x: 100, y: 150}, "NV": {x: 150, y: 230}, "WY": {x: 280, y: 180}, "SD": {x: 410, y: 170}, "IA": {x: 510, y: 210},
+            "IL": {x: 590, y: 240}, "IN": {x: 650, y: 240}, "OH": {x: 710, y: 230}, "PA": {x: 770, y: 200}, "NJ": {x: 830, y: 210},
+            "CA": {x: 70, y: 280}, "UT": {x: 210, y: 260}, "CO": {x: 310, y: 260}, "NE": {x: 410, y: 240}, "MO": {x: 520, y: 290},
+            "KY": {x: 660, y: 310}, "WV": {x: 730, y: 270}, "VA": {x: 790, y: 270}, "MD": {x: 820, y: 250}, "DE": {x: 850, y: 240},
+            "AZ": {x: 170, y: 370}, "NM": {x: 270, y: 370}, "KS": {x: 410, y: 320}, "OK": {x: 430, y: 390}, "AR": {x: 530, y: 370},
+            "TN": {x: 640, y: 360}, "NC": {x: 780, y: 330}, "SC": {x: 760, y: 390}, "DC": {x: 810, y: 280},
+            "HI": {x: 220, y: 520}, "TX": {x: 380, y: 470}, "LA": {x: 530, y: 450}, "MS": {x: 600, y: 430}, "AL": {x: 660, y: 420},
+            "GA": {x: 720, y: 420}, "FL": {x: 780, y: 490}
+        };
+
+        const stateData = {};
+        usStatesList.forEach(code => {
+            const isBattleground = ["AZ", "GA", "MI", "PA", "NV", "WI", "TX", "NC", "OH", "ME", "AK", "IA", "KS", "FL", "MN"].includes(code);
+            const baseA = isBattleground ? Math.floor(Math.random() * 400000) + 200000 : Math.floor(Math.random() * 150000) + 50000;
+            const baseB = isBattleground ? Math.floor(Math.random() * 400000) + 200000 : Math.floor(Math.random() * 150000) + 50000;
+
+            stateData[code] = {
+                name: stateNames[code],
+                candA: baseA,
+                candB: baseB,
+                totalPrecincts: isBattleground ? 450 : 150,
+                precinctsIn: isBattleground ? 280 : 95
+            };
+        });
 
         let currentMode = "AUDIT"; 
         let isStreamActive = true;
@@ -356,7 +423,67 @@
                     banner.innerHTML = `<div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-check text-emerald-400 text-base"></i><div><span class="font-bold text-white">VERIFIED AUDIT LEDGER MODE ACTIVE:</span> <span class="text-slate-300">Bypassing media projections. Showing raw SHA-256 hashed precinct returns directly from audit ledger.</span></div></div><span class="text-[10px] font-mono-code bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded">SHA256_VERIFIED</span>`;
                 }
             }
-            renderStateGrid();
+            renderAllViews();
+        }
+
+        function renderMap() {
+            const svg = document.getElementById('us-map-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const tooltip = document.getElementById('map-tooltip');
+
+            usStatesList.forEach(code => {
+                const s = stateData[code];
+                const pos = mapGrid[code] || { x: 100, y: 100 };
+                const isDemLead = s.candA > s.candB;
+                const fillColor = isDemLead ? "#2563eb" : "#dc2626";
+
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "state-shape");
+                g.onclick = () => openForensicModal(code);
+
+                g.onmousemove = (e) => {
+                    if (!tooltip) return;
+                    const totalVotes = s.candA + s.candB;
+                    const margin = Math.abs(s.candA - s.candB);
+                    const marginPct = totalVotes > 0 ? ((margin / totalVotes) * 100).toFixed(1) : "0.0";
+                    const leader = isDemLead ? "DEM" : "REP";
+
+                    tooltip.style.left = `${e.offsetX + 15}px`;
+                    tooltip.style.top = `${e.offsetY - 35}px`;
+                    tooltip.innerHTML = `<strong>${s.name} (${code})</strong><br/>${leader} +${marginPct}%<br/>Precincts: ${Math.round((s.precinctsIn/s.totalPrecincts)*100)}%`;
+                    tooltip.classList.remove('hidden');
+                };
+
+                g.onmouseleave = () => {
+                    if (tooltip) tooltip.classList.add('hidden');
+                };
+
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", pos.x - 22);
+                rect.setAttribute("y", pos.y - 18);
+                rect.setAttribute("width", "44");
+                rect.setAttribute("height", "36");
+                rect.setAttribute("rx", "6");
+                rect.setAttribute("fill", fillColor);
+                rect.setAttribute("stroke", "#1e293b");
+                rect.setAttribute("stroke-width", "1.5");
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", pos.x);
+                text.setAttribute("y", pos.y + 4);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("fill", "#ffffff");
+                text.setAttribute("font-size", "11");
+                text.setAttribute("font-weight", "800");
+                text.setAttribute("font-family", "JetBrains Mono");
+                text.textContent = code;
+
+                g.appendChild(rect);
+                g.appendChild(text);
+                svg.appendChild(g);
+            });
         }
 
         function renderStateGrid() {
@@ -371,13 +498,13 @@
                 const marginPct = totalVotes > 0 ? ((margin / totalVotes) * 100).toFixed(1) : "0.0";
                 
                 const isDemLead = s.candA > s.candB;
-                const bgStyle = isDemLead ? "bg-blue-950/40 border-blue-700/70" : "bg-red-950/40 border-red-700/70";
-                const badgeBg = isDemLead ? "bg-blue-500/20 text-blue-300 border-blue-500/40" : "bg-red-500/20 text-red-300 border-red-500/40";
+                const borderCol = isDemLead ? "border-blue-800/60" : "border-red-800/60";
+                const badgeBg = isDemLead ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "bg-red-500/10 text-red-400 border-red-500/30";
                 const leadLabel = isDemLead ? `DEM +${marginPct}%` : `REP +${marginPct}%`;
 
                 const card = document.createElement('div');
                 card.onclick = () => openForensicModal(stKey);
-                card.className = `${bgStyle} border rounded-xl p-3 hover:border-cyan-400 transition cursor-pointer space-y-2 group shadow-md`;
+                card.className = `bg-soc-950 border ${borderCol} rounded-xl p-3 hover:border-slate-600 transition cursor-pointer space-y-2 group`;
                 card.innerHTML = `
                     <div class="flex justify-between items-center">
                         <span class="font-black text-sm text-white group-hover:text-cyan-400 transition font-mono-code">${stKey} - ${s.name}</span>
@@ -387,16 +514,20 @@
                         <div class="flex justify-between text-blue-400"><span>Dem:</span><span class="font-bold">${s.candA.toLocaleString()}</span></div>
                         <div class="flex justify-between text-red-400"><span>Rep:</span><span class="font-bold">${s.candB.toLocaleString()}</span></div>
                     </div>
-                    <div class="pt-1 border-t border-slate-900 flex justify-between text-[10px] text-slate-400 font-mono-code">
+                    <div class="pt-1 border-t border-slate-900 flex justify-between text-[10px] text-slate-500 font-mono-code">
                         <span>Precincts: ${Math.round((s.precinctsIn/s.totalPrecincts)*100)}%</span>
-                        <span class="text-emerald-400"><i class="fa-solid fa-fingerprint"></i> SHA-256</span>
+                        <span class="text-cyan-500"><i class="fa-solid fa-fingerprint"></i> SHA-256</span>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // Live Real-time Firestore Listener
+        function renderAllViews() {
+            renderMap();
+            renderStateGrid();
+        }
+
         if (db) {
             db.collection("audit_ledger").onSnapshot((snapshot) => {
                 snapshot.docChanges().forEach((change) => {
@@ -408,7 +539,7 @@
                         }
                     }
                 });
-                renderStateGrid();
+                renderAllViews();
             });
         }
 
@@ -461,7 +592,7 @@
             if (auditLedger.length > 50) auditLedger.pop();
 
             renderAuditFeed();
-            renderStateGrid();
+            renderAllViews();
         }
 
         function renderAuditFeed() {
@@ -536,7 +667,7 @@
             } else if (format === 'csv') {
                 let csvRows = ["ID,Timestamp,State,Delta,Hash,Anomaly"];
                 auditLedger.forEach(e => {
-                    csvRows.push(`${e.id},${e.timestamp},${e.county || e.state},"${e.delta}",${e.hash},${e.isAnomaly}`);
+                    csvRows.push(`${e.id},${e.timestamp},${e.state},"${e.delta}",${e.hash},${e.isAnomaly}`);
                 });
                 const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
                 const url = window.URL.createObjectURL(blob);
@@ -550,7 +681,7 @@
         }
 
         window.onload = () => {
-            renderStateGrid();
+            renderAllViews();
             processStreamTick();
             setInterval(() => processStreamTick(), 4000);
         };
