@@ -433,6 +433,7 @@
 
             const tooltip = document.getElementById('map-tooltip');
 
+            // Render crisp, bordered state blocks on the national grid
             usStatesList.forEach(code => {
                 const s = stateData[code];
                 const pos = mapGrid[code] || { x: 100, y: 100 };
@@ -460,6 +461,7 @@
                     if (tooltip) tooltip.classList.add('hidden');
                 };
 
+                // State Block with Distinct Cyan/Slate Border Highlight
                 const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                 rect.setAttribute("x", pos.x - 22);
                 rect.setAttribute("y", pos.y - 18);
@@ -467,8 +469,8 @@
                 rect.setAttribute("height", "36");
                 rect.setAttribute("rx", "6");
                 rect.setAttribute("fill", fillColor);
-                rect.setAttribute("stroke", "#1e293b");
-                rect.setAttribute("stroke-width", "1.5");
+                rect.setAttribute("stroke", "#38bdf8"); // Bright border stroke
+                rect.setAttribute("stroke-width", "2");
 
                 const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 text.setAttribute("x", pos.x);
