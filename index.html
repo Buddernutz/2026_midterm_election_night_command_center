@@ -52,7 +52,7 @@
                             VERIFIED AUDIT MODE
                         </span>
                     </h1>
-                    <p class="text-xs text-slate-400">Dual-Engine Decision Desk & Independent SHA-256 Audit Ledger</p>
+                    <p class="text-xs text-slate-400">National Battleground Returns & SHA-256 Cryptographic Audit Ledger</p>
                 </div>
             </div>
             
@@ -62,7 +62,7 @@
               Support
             </a>
            
-            <!-- Mode Switcher Toggle Bar -->
+            <!-- Mode Switcher -->
             <div class="flex items-center bg-soc-950 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
                 <button id="btn-mode-audit" onclick="setDashboardMode('AUDIT')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md">
                     <i class="fa-solid fa-shield-halved text-emerald-300"></i>
@@ -74,7 +74,7 @@
                 </button>
             </div>
 
-            <!-- Controls & Viewer Badge -->
+            <!-- Controls & Live Viewer Badge -->
             <div class="flex items-center space-x-2 bg-soc-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
                 <span class="relative flex h-2.5 w-2.5">
                     <span id="ping-indicator" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -169,7 +169,6 @@
                     <div class="flex items-center space-x-3 text-[11px] font-mono-code">
                         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-600 inline-block"></span> Dem Lead</span>
                         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-600 inline-block"></span> Rep Lead</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-600 inline-block"></span> Toss-Up</span>
                     </div>
                 </div>
 
@@ -281,7 +280,6 @@
             appId: "1:538970421795:web:a1c8831034bcbc2f8f96"
         };
 
-        // Firebase Setup with Fallbacks
         let db = null, rtdb = null;
         try {
             firebase.initializeApp(firebaseConfig);
@@ -289,7 +287,7 @@
             rtdb = firebase.database();
 
             const presenceRef = rtdb.ref('presence/' + Math.random().toString(36).substring(2, 9));
-            presenceRef.setValue({ online: true, joined: Date.now() });
+            presenceRef.setValue({ online: true, joined: Date.now(), region: "US_NATIONAL" });
             presenceRef.onDisconnect().remove();
 
             rtdb.ref('presence').on('value', (snapshot) => {
@@ -311,7 +309,11 @@
             "NV": { name: "Nevada", candA: 210000, candB: 205000, totalPrecincts: 180, precinctsIn: 95 },
             "WI": { name: "Wisconsin", candA: 490000, candB: 492000, totalPrecincts: 450, precinctsIn: 280 },
             "TX": { name: "Texas", candA: 1200000, candB: 1450000, totalPrecincts: 700, precinctsIn: 510 },
-            "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210 }
+            "NC": { name: "North Carolina", candA: 650000, candB: 670000, totalPrecincts: 350, precinctsIn: 210 },
+            "OH": { name: "Ohio", candA: 720000, candB: 790000, totalPrecincts: 410, precinctsIn: 290 },
+            "ME": { name: "Maine", candA: 180000, candB: 172000, totalPrecincts: 110, precinctsIn: 85 },
+            "AK": { name: "Alaska", candA: 92000, candB: 98000, totalPrecincts: 90, precinctsIn: 50 },
+            "IA": { name: "Iowa", candA: 210000, candB: 245000, totalPrecincts: 130, precinctsIn: 92 }
         };
 
         let currentMode = "AUDIT"; 
@@ -369,13 +371,13 @@
                 const marginPct = totalVotes > 0 ? ((margin / totalVotes) * 100).toFixed(1) : "0.0";
                 
                 const isDemLead = s.candA > s.candB;
-                const borderCol = isDemLead ? "border-blue-800/60" : "border-red-800/60";
-                const badgeBg = isDemLead ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "bg-red-500/10 text-red-400 border-red-500/30";
+                const bgStyle = isDemLead ? "bg-blue-950/40 border-blue-700/70" : "bg-red-950/40 border-red-700/70";
+                const badgeBg = isDemLead ? "bg-blue-500/20 text-blue-300 border-blue-500/40" : "bg-red-500/20 text-red-300 border-red-500/40";
                 const leadLabel = isDemLead ? `DEM +${marginPct}%` : `REP +${marginPct}%`;
 
                 const card = document.createElement('div');
                 card.onclick = () => openForensicModal(stKey);
-                card.className = `bg-soc-950 border ${borderCol} rounded-xl p-3 hover:border-slate-600 transition cursor-pointer space-y-2 group`;
+                card.className = `${bgStyle} border rounded-xl p-3 hover:border-cyan-400 transition cursor-pointer space-y-2 group shadow-md`;
                 card.innerHTML = `
                     <div class="flex justify-between items-center">
                         <span class="font-black text-sm text-white group-hover:text-cyan-400 transition font-mono-code">${stKey} - ${s.name}</span>
@@ -385,12 +387,28 @@
                         <div class="flex justify-between text-blue-400"><span>Dem:</span><span class="font-bold">${s.candA.toLocaleString()}</span></div>
                         <div class="flex justify-between text-red-400"><span>Rep:</span><span class="font-bold">${s.candB.toLocaleString()}</span></div>
                     </div>
-                    <div class="pt-1 border-t border-slate-900 flex justify-between text-[10px] text-slate-500 font-mono-code">
+                    <div class="pt-1 border-t border-slate-900 flex justify-between text-[10px] text-slate-400 font-mono-code">
                         <span>Precincts: ${Math.round((s.precinctsIn/s.totalPrecincts)*100)}%</span>
-                        <span class="text-cyan-500"><i class="fa-solid fa-fingerprint"></i> SHA-256</span>
+                        <span class="text-emerald-400"><i class="fa-solid fa-fingerprint"></i> SHA-256</span>
                     </div>
                 `;
                 grid.appendChild(card);
+            });
+        }
+
+        // Live Real-time Firestore Listener
+        if (db) {
+            db.collection("audit_ledger").onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added" || change.type === "modified") {
+                        const data = change.doc.data();
+                        if (data.state && stateData[data.state]) {
+                            if (data.candA) stateData[data.state].candA = data.candA;
+                            if (data.candB) stateData[data.state].candB = data.candB;
+                        }
+                    }
+                });
+                renderStateGrid();
             });
         }
 
@@ -518,7 +536,7 @@
             } else if (format === 'csv') {
                 let csvRows = ["ID,Timestamp,State,Delta,Hash,Anomaly"];
                 auditLedger.forEach(e => {
-                    csvRows.push(`${e.id},${e.timestamp},${e.state},"${e.delta}",${e.hash},${e.isAnomaly}`);
+                    csvRows.push(`${e.id},${e.timestamp},${e.county || e.state},"${e.delta}",${e.hash},${e.isAnomaly}`);
                 });
                 const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
                 const url = window.URL.createObjectURL(blob);
